@@ -9,5 +9,5 @@ public interface MovieService {
 
     Page<Movie> getPage(int size);
 
-    String add(MovieRequest movieRequest, MultipartFile file);
+    String create(MovieRequest movieRequest, MultipartFile file);
 }
