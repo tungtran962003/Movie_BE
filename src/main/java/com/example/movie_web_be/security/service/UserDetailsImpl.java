@@ -43,8 +43,6 @@ public class UserDetailsImpl implements UserDetails {
 
     private RankCustomer rankCustomer;
 
-    private AccountStatus accountStatus;
-
     private Collection<? extends GrantedAuthority> roles;
 
     public static UserDetailsImpl build(Account account) {
@@ -63,7 +61,6 @@ public class UserDetailsImpl implements UserDetails {
                 account.getAvatar(),
                 account.getIsActive(),
                 account.getRankCustomer(),
-                account.getAccountStatus(),
                 authorities
         );
     }
