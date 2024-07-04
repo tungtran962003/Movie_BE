@@ -9,6 +9,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class AccountServiceImpl implements AccountService {
 
@@ -19,5 +21,10 @@ public class AccountServiceImpl implements AccountService {
     public Page<Account> getPage(int page) {
         Pageable pageable = PageRequest.of(page, 10);
         return accountRepository.findAllByIsActiveOrderByUpdateDateDesc(pageable, true);
+    }
+
+    @Override
+    public Boolean checkExistsEmail(String email) {
+        return accountRepository.existsAccountByEmail(email);
     }
 }

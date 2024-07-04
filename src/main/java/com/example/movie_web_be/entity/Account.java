@@ -33,6 +33,8 @@ public class Account {
 
     private String phoneNumber;
 
+    private String avatar;
+
     private Boolean isActive;
 
     @ManyToOne
@@ -42,4 +44,5 @@ public class Account {
     @ManyToOne
     @JoinColumn(name = "RoleId", referencedColumnName = "Id")
     private Role role;
+
 }
