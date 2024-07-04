@@ -24,6 +24,6 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody SigninRequest signinRequest) {
-        return ResponseEntity.ok(authService.login(signinRequest));
+        return ResponseEntity.ok(authService.login(signinRequest) == null ? authService.login(signinRequest) : "Email or password is correct");
     }
 }

@@ -78,9 +78,14 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JwtResponse login(SigninRequest signinRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(signinRequest.getEmail(), signinRequest.getPassword())
-        );
+        Authentication authentication = null;
+        try {
+            authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(signinRequest.getEmail(), signinRequest.getPassword())
+            );
+        } catch (Exception e) {
+            return null;
+        }
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtil.createToken(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
