@@ -24,11 +24,14 @@ public class JwtResponse {
 
     private String avatar;
 
-    public JwtResponse(String jwt, String name, String email, List<String> roles, String avatar) {
+    private Integer statusCode;
+
+    public JwtResponse(String jwt, String name, String email, List<String> roles, String avatar, Integer statusCode) {
         this.jwt = jwt;
         this.name = name;
         this.email = email;
         this.roles = roles;
         this.avatar = avatar;
+        this.statusCode = statusCode;
     }
 }

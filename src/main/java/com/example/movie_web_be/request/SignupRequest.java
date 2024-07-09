@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -14,11 +16,15 @@ public class SignupRequest {
 
     private String name;
 
+    private Boolean gender;
+
     private String email;
 
     private String password;
 
     private String phoneNumber;
+
+    private String birthDay;
 
     private String roleName;
 

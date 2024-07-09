@@ -1,11 +1,10 @@
 package com.example.movie_web_be.security.jwt;
 
 import com.example.movie_web_be.security.service.UserDetailsImpl;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
-import java.util.Base64;
 import java.util.Date;
 
 @Component
@@ -29,10 +27,10 @@ public class JwtUtil {
     public String createToken(Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         return Jwts.builder()
-                .subject(userDetails.getEmail())     // set email vào mã token
-                .issuedAt(new Date())                // set thời gian tạo mã
-                .expiration(new Date(new Date().getTime() + jwtExpiration)) // set thời gian sống của mã
-                .signWith(key())
+                .setSubject((userDetails.getEmail())) // Set email
+                .setIssuedAt(new Date()) // Set tại thời điểm nào
+                .setExpiration(new Date((new Date()).getTime() + jwtExpiration)) // Set thời gian sống
+                .signWith(key(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -42,16 +40,23 @@ public class JwtUtil {
 
     public Boolean validateToken(String token) {
         try {
-            Jwts.parser().verifyWith((SecretKey) key()).build().parseSignedClaims(token).getPayload();
-//            Jwts.parser().setSigningKey(key()).build().parse(token);
+            Jwts.parserBuilder().setSigningKey(key()).build().parse(token);
             return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            log.error(e.getMessage());
+        } catch (MalformedJwtException e) {
+            log.error("Invalid JWT token: {}", e.getMessage()); // Token không đúng định dạng
+        } catch (ExpiredJwtException e) {
+            log.error("JWT token is expired: {}", e.getMessage()); // Token bị hết thời gian
+        } catch (UnsupportedJwtException e) {
+            log.error("JWT token is unsupported: {}", e.getMessage()); // Không hỗ trợ token
+        } catch (IllegalArgumentException e) {
+            log.error("JWT claims string is empty: {}", e.getMessage()); // Có ký tự trống
+        } catch (SignatureException e) {
+            log.error("Invalid JWT signature: {}", e.getMessage());
         }
         return false;
     }
 
     public String getEmailFromJwtToken(String token) {
-        return Jwts.parser().verifyWith((SecretKey) key()).build().parseSignedClaims(token).getPayload().getSubject();
+        return Jwts.parserBuilder().setSigningKey(key()).build().parseClaimsJws(token).getBody().getSubject();
     }
 }

@@ -25,6 +25,8 @@ public class Account {
 
     private String name;
 
+    private Boolean gender;
+
     private Date createDate;
 
     private Date updateDate;

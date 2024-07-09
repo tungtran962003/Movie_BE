@@ -62,19 +62,17 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(req -> {
                     //Testing purpose
-                    req.requestMatchers("/signup", "/signin", "/confirmEmail", "/vnpay/return").permitAll();
+                    req.requestMatchers("/signup", "/login", "/confirmEmail", "/vnpay/return").permitAll();
 
                     //Role base authority
-                    req.requestMatchers("/auth/resetPassword").hasAnyAuthority("Admin", "Staff", "User")
-                            .requestMatchers("/auth/**").hasAnyAuthority("Admin", "Staff")
+                    req.requestMatchers("/api/resetPassword").hasAnyAuthority("Admin", "Staff", "User")
+                            .requestMatchers("/api/**").hasAnyAuthority("Admin", "Staff")
                             .anyRequest().permitAll();
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(daoAuthenticationProvider())
                 .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-        httpSecurity.logout(logout -> logout.logoutSuccessUrl("/logout").permitAll());
         httpSecurity.exceptionHandling(exception -> exception.authenticationEntryPoint(jwtEntryPoint));
-        httpSecurity.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }

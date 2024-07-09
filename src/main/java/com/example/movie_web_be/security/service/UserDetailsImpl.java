@@ -25,6 +25,8 @@ public class UserDetailsImpl implements UserDetails {
 
     private String name;
 
+    private Boolean gender;
+
     private String email;
 
     private String password;
@@ -52,6 +54,7 @@ public class UserDetailsImpl implements UserDetails {
         return new UserDetailsImpl(
                 account.getId(),
                 account.getName(),
+                account.getGender(),
                 account.getEmail(),
                 account.getPassword(),
                 account.getBirthDay(),
