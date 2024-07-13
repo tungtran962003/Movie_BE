@@ -12,6 +12,9 @@ import com.example.movie_web_be.response.MessageResponse;
 import com.example.movie_web_be.security.jwt.JwtUtil;
 import com.example.movie_web_be.security.service.UserDetailsImpl;
 import com.example.movie_web_be.service.AuthService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -106,8 +110,29 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public MessageResponse logout() {
-        SecurityContextHolder.getContext().setAuthentication(null);
-        return new MessageResponse("Logout success", 0);
+    public MessageResponse logout(HttpServletRequest request, HttpServletResponse response) {
+//        SecurityContextHolder.getContext().setAuthentication(null);
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication != null) {
+//            new SecurityContextLogoutHandler().logout(request, response, authentication);
+//            return new MessageResponse("Logout success", 0);
+//        }
+        try {
+            request.logout();
+            return new MessageResponse("Logout success", 0);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Account getPrincipal(String token) {
+        String parseToken = token.replace("Bearer ", "");
+        String email = jwtUtil.getEmailFromJwtToken(parseToken);
+        Account account = accountRepository.findByEmail(email).orElse(null);
+        if (account == null) {
+            return null;
+        }
+        return account;
     }
 }

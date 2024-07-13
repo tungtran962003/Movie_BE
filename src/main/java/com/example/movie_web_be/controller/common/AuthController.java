@@ -4,6 +4,8 @@ import com.example.movie_web_be.request.SigninRequest;
 import com.example.movie_web_be.request.SignupRequest;
 import com.example.movie_web_be.response.MessageResponse;
 import com.example.movie_web_be.service.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +30,13 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(signinRequest) == null ? new MessageResponse("Email or password is correct", 1) : authService.login(signinRequest));
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout() {
-        return ResponseEntity.ok((authService.logout()));
+    @GetMapping("/logout123")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        return ResponseEntity.ok((authService.logout(request, response)));
+    }
+
+    @GetMapping("/principal")
+    public ResponseEntity<?> getAccountPrincipal(@RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok(authService.getPrincipal(token));
     }
 }
