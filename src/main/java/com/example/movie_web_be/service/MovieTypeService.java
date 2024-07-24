@@ -1,6 +1,7 @@
 package com.example.movie_web_be.service;
 
 import com.example.movie_web_be.entity.MovieType;
+import com.example.movie_web_be.response.MessageResponse;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -11,9 +12,9 @@ public interface MovieTypeService {
 
     Page<MovieType> getPage(Integer page, Integer pageSize);
 
-    Boolean create(String name);
+    MessageResponse create(String name);
 
-    Boolean update(Integer idUpdate, String name);
+    MessageResponse update(Integer idUpdate, String name);
 
-    Boolean delete(Integer idDelete);
+    MessageResponse delete(Integer idDelete);
 }

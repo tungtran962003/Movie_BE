@@ -2,8 +2,10 @@ package com.example.movie_web_be.service.impl;
 
 import com.example.movie_web_be.entity.Account;
 import com.example.movie_web_be.entity.RankCustomer;
+import com.example.movie_web_be.entity.RefreshToken;
 import com.example.movie_web_be.entity.Role;
 import com.example.movie_web_be.repository.AccountRepository;
+import com.example.movie_web_be.repository.RefreshTokenRepository;
 import com.example.movie_web_be.repository.RoleRepository;
 import com.example.movie_web_be.request.SigninRequest;
 import com.example.movie_web_be.request.SignupRequest;
@@ -12,23 +14,21 @@ import com.example.movie_web_be.response.MessageResponse;
 import com.example.movie_web_be.security.jwt.JwtUtil;
 import com.example.movie_web_be.security.service.UserDetailsImpl;
 import com.example.movie_web_be.service.AuthService;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,6 +48,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Value("${bezkoder.app.jwtExpiration}")
+    private Integer jwtExpiration;
+
+    @Autowired
+    private RefreshTokenRepository refreshTokenRepository;
 
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -85,7 +91,7 @@ public class AuthServiceImpl implements AuthService {
         account.setPhoneNumber(signupRequest.getPhoneNumber());
         account.setRankCustomer(RankCustomer.builder().id(1).build());
         accountRepository.save(account);
-        return new MessageResponse("Account registration successful", 0);
+        return new MessageResponse("Đăng ký tài khoản thành công", 0);
     }
 
     @Override
@@ -104,24 +110,26 @@ public class AuthServiceImpl implements AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtil.createToken(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        RefreshToken refreshToken = new RefreshToken();
+        refreshToken.setToken(jwt);
+        refreshToken.setExpiredTime(new Date((new Date()).getTime() + jwtExpiration));
+        Optional<Account> optionalAccount = accountRepository.findByEmail(((UserDetailsImpl) authentication.getPrincipal()).getEmail());
+        refreshToken.setAccount(optionalAccount.get());
+        refreshTokenRepository.save(refreshToken);
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         return new JwtResponse(jwt, userDetails.getName(), userDetails.getEmail(), roles, userDetails.getAvatar(), 0);
     }
 
     @Override
-    public MessageResponse logout(HttpServletRequest request, HttpServletResponse response) {
-//        SecurityContextHolder.getContext().setAuthentication(null);
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if (authentication != null) {
-//            new SecurityContextLogoutHandler().logout(request, response, authentication);
-//            return new MessageResponse("Logout success", 0);
-//        }
-        try {
-            request.logout();
-            return new MessageResponse("Logout success", 0);
-        } catch (ServletException e) {
-            throw new RuntimeException(e);
+    public MessageResponse logout(String token) {
+        Account account = getPrincipal(token);
+        RefreshToken refreshToken = refreshTokenRepository.findTopByAccount_IdOrderByIdDesc(account.getId());
+        if (refreshToken != null) {
+            refreshTokenRepository.delete(refreshToken);
+            return new MessageResponse("ok", 0);
+        } else {
+            return new MessageResponse("Tài khoàn không tồn tại", 1);
         }
     }
 

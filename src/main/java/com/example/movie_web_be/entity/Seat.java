@@ -19,6 +19,8 @@ public class Seat {
 
     private String code;
 
+    private String line;
+
     @ManyToOne
     @JoinColumn(name = "SeatStatusId", referencedColumnName = "Id")
     private SeatStatus seatStatus;
@@ -26,4 +28,8 @@ public class Seat {
     @ManyToOne
     @JoinColumn(name = "SeatTypeId", referencedColumnName = "Id")
     private SeatType seatType;
+
+    @ManyToOne
+    @JoinColumn(name = "RoomId", referencedColumnName = "Id")
+    private Room room;
 }

@@ -2,6 +2,7 @@ package com.example.movie_web_be.service.impl;
 
 import com.example.movie_web_be.entity.MovieType;
 import com.example.movie_web_be.repository.MovieTypeRepository;
+import com.example.movie_web_be.response.MessageResponse;
 import com.example.movie_web_be.service.MovieTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,7 +29,7 @@ public class MovieTypeServiceImpl implements MovieTypeService {
         return movieTypeRepository.findAllByIsActiveOrderByIdDesc(pageable, true);
     }
 
-    public Boolean checkNameMovieType(String name) {
+    public Boolean checkName(String name) {
         MovieType movieType = movieTypeRepository.findByNameAndIsActive(name, true);
         if (movieType != null) {
             return false;
@@ -47,39 +48,39 @@ public class MovieTypeServiceImpl implements MovieTypeService {
 //    }
 
     @Override
-    public Boolean create(String name) {
-        if (!checkNameMovieType(name)) {
-            return false;
+    public MessageResponse create(String name) {
+        if (!checkName(name)) {
+            return new MessageResponse("Dữ liệu đã tồn tại", 1);
         }
         MovieType movieType = new MovieType();
         movieType.setName(name);
         movieType.setIsActive(true);
         movieTypeRepository.save(movieType);
-        return true;
+        return new MessageResponse("Thêm dữ liệu thành công", 0);
     }
 
     @Override
-    public Boolean update(Integer idUpdate, String name) {
-        if (!checkNameMovieType(name)) {
-            return false;
+    public MessageResponse update(Integer idUpdate, String name) {
+        if (!checkName(name)) {
+            return new MessageResponse("Dữ liệu đã tồn tại", 1);
         }
         MovieType movieType = movieTypeRepository.findByIdAndIsActive(idUpdate, true);
         if (movieType != null) {
             movieType.setName(name);
             movieTypeRepository.save(movieType);
-            return true;
+            return new MessageResponse("Sửa dữ liệu thành công", 0);
         }
-        return false;
+        return new MessageResponse("Lỗi", 1);
     }
 
     @Override
-    public Boolean delete(Integer idDelete) {
+    public MessageResponse delete(Integer idDelete) {
         MovieType movieType = movieTypeRepository.findByIdAndIsActive(idDelete, true);
         if (movieType != null) {
             movieType.setIsActive(false);
             movieTypeRepository.save(movieType);
-            return true;
+            return new MessageResponse("Xoá dữ liệu thành công", 0);
         }
-        return false;
+        return new MessageResponse("Lỗi", 1);
     }
 }

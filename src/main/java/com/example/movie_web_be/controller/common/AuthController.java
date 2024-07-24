@@ -30,9 +30,9 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(signinRequest) == null ? new MessageResponse("Email or password is correct", 1) : authService.login(signinRequest));
     }
 
-    @GetMapping("/logout123")
-    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
-        return ResponseEntity.ok((authService.logout(request, response)));
+    @GetMapping("/logoutAccount")
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok((authService.logout(token)));
     }
 
     @GetMapping("/principal")

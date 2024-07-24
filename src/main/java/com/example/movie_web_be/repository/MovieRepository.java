@@ -12,6 +12,21 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
 
     @Query(value = "SELECT m " +
             "FROM Movie m " +
-            "WHERE m.premiereDate <= CURRENT_TIME AND m.isActive = true")
-    Page<Movie> getMovieIsShowing(Pageable pageable);
+            "WHERE m.premiereDate <= CURRENT_TIME AND m.isActive = true " +
+            "ORDER BY m.id DESC ")
+    Page<Movie> getPageMovieIsShowing(Pageable pageable);
+
+    Movie findByIdAndIsActive(Integer id, Boolean isActive);
+
+    @Query(value = "SELECT m " +
+            "FROM Movie m " +
+            "WHERE m.premiereDate >= CURRENT_TIME AND m.isActive = true " +
+            "ORDER BY m.id DESC")
+    Page<Movie> getPageUpComingMovie(Pageable pageable);
+
+    @Query(value = "SELECT m " +
+            "FROM Movie m " +
+            "WHERE m.isActive = true " +
+            "ORDER BY m.id DESC")
+    Page<Movie> getPageMovie(Pageable pageable);
 }

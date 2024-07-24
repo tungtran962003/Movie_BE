@@ -16,7 +16,7 @@ public interface AuthService {
 
     JwtResponse login(SigninRequest signinRequest) throws InterruptedException;
 
-    MessageResponse logout(HttpServletRequest request, HttpServletResponse response);
+    MessageResponse logout(String token);
 
     Account getPrincipal(String token);
 }

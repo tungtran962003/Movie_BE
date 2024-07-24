@@ -26,17 +26,4 @@ public class MovieRequest {
     private String performer;
 
     private Integer movieTypeId;
-
-    public Movie addMovie(Movie movie) {
-        movie.setName(this.name);
-        movie.setTime(this.time);
-        movie.setPremiereDate(this.premiereDate);
-        movie.setDescription(this.description);
-        movie.setDirector(this.director);
-        movie.setLanguage(this.language);
-        movie.setPerformer(this.performer);
-        movie.setIsActive(true);
-        movie.setMovieType(MovieType.builder().id(this.movieTypeId).build());
-        return movie;
-    }
 }
