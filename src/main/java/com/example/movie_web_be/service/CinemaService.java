@@ -1,6 +1,7 @@
 package com.example.movie_web_be.service;
 
 import com.example.movie_web_be.entity.Cinema;
+import com.example.movie_web_be.entity.Room;
 import com.example.movie_web_be.request.CinemaRequest;
 import com.example.movie_web_be.response.MessageResponse;
 import org.springframework.data.domain.Page;
@@ -19,4 +20,6 @@ public interface CinemaService {
     MessageResponse update(Integer idUpdate, CinemaRequest cinemaRequest);
 
     MessageResponse delete(Integer idDelete);
+
+    Page<Room> getPageRoomByCinemaId(Integer cinemaId, Integer page, Integer pageSize);
 }

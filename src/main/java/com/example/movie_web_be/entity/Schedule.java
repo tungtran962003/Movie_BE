@@ -32,6 +32,6 @@ public class Schedule {
     private Movie movie;
 
     @ManyToOne
-    @JoinColumn(name = "RoomId", referencedColumnName = "Id")
-    private Room room;
+    @JoinColumn(name = "CinemaId", referencedColumnName = "Id")
+    private Cinema cinema;
 }

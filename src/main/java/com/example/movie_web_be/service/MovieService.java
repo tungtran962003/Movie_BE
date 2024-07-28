@@ -1,14 +1,11 @@
 package com.example.movie_web_be.service;
 
 import com.example.movie_web_be.entity.Movie;
-import com.example.movie_web_be.request.MovieRequest;
 import com.example.movie_web_be.response.MessageResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
 
 public interface MovieService {
 

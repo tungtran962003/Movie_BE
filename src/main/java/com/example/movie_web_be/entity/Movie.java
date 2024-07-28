@@ -21,6 +21,8 @@ public class Movie {
 
     private String name;
 
+    private String trailer;
+
     private Integer time;
 
     private Date premiereDate;

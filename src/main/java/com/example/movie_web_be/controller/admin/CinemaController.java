@@ -1,8 +1,10 @@
 package com.example.movie_web_be.controller.admin;
 
+import com.example.movie_web_be.entity.Room;
 import com.example.movie_web_be.request.CinemaRequest;
 import com.example.movie_web_be.service.CinemaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,5 +40,12 @@ public class CinemaController {
     @DeleteMapping("/delete/{idDelete}")
     public ResponseEntity<?> delete(@PathVariable Integer idDelete) {
         return ResponseEntity.ok(cinemaService.delete(idDelete));
+    }
+
+    @GetMapping("/{cinemaId}/room")
+    public ResponseEntity<?> getListRoomByCinemaId(@PathVariable Integer cinemaId, @RequestParam Integer page,
+                                                   @RequestParam Integer pageSize) {
+        Page<Room> pageRoom = cinemaService.getPageRoomByCinemaId(cinemaId, page, pageSize);
+        return ResponseEntity.ok(pageRoom);
     }
 }

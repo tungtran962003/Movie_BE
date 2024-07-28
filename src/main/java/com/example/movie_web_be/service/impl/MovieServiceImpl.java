@@ -3,7 +3,6 @@ package com.example.movie_web_be.service.impl;
 import com.example.movie_web_be.entity.Movie;
 import com.example.movie_web_be.entity.MovieType;
 import com.example.movie_web_be.repository.MovieRepository;
-import com.example.movie_web_be.request.MovieRequest;
 import com.example.movie_web_be.response.MessageResponse;
 import com.example.movie_web_be.service.MovieService;
 import com.example.movie_web_be.utils.FileUtil;
@@ -12,14 +11,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-import java.util.Objects;
 
 @Service
 public class MovieServiceImpl implements MovieService {

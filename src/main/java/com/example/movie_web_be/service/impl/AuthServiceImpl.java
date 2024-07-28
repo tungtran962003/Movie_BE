@@ -88,6 +88,7 @@ public class AuthServiceImpl implements AuthService {
         account.setCreateDate(new Date());
         account.setUpdateDate(new Date());
         account.setRole(role);
+        account.setGender(signupRequest.getGender());
         account.setPhoneNumber(signupRequest.getPhoneNumber());
         account.setRankCustomer(RankCustomer.builder().id(1).build());
         accountRepository.save(account);

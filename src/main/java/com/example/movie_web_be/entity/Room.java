@@ -21,10 +21,6 @@ public class Room {
 
     private String name;
 
-    private String description;
-
-    private String type;
-
     private Boolean isActive;
 
     @ManyToOne

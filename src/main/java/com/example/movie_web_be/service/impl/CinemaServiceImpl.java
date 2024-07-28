@@ -1,12 +1,14 @@
 package com.example.movie_web_be.service.impl;
 
 import com.example.movie_web_be.entity.Cinema;
+import com.example.movie_web_be.entity.Room;
 import com.example.movie_web_be.repository.CinemaRepository;
 import com.example.movie_web_be.request.CinemaRequest;
 import com.example.movie_web_be.response.MessageResponse;
 import com.example.movie_web_be.service.CinemaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -83,5 +85,15 @@ public class CinemaServiceImpl implements CinemaService {
             return new MessageResponse("Xoá dữ liệu thành công", 0);
         }
         return new MessageResponse("Lỗi", 1);
+    }
+
+    @Override
+    public Page<Room> getPageRoomByCinemaId(Integer cinemaId, Integer page, Integer pageSize) {
+        List<Room> listRoomByCinemaId = cinemaRepository.getListRoomByCinemaId(cinemaId);
+        Pageable pageable = PageRequest.of(page, pageSize);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), listRoomByCinemaId.size());
+        List<Room> pageContent = listRoomByCinemaId.subList(start, end);
+        return new PageImpl<>(pageContent, pageable, listRoomByCinemaId.size());
     }
 }

@@ -21,6 +21,8 @@ public class Seat {
 
     private String line;
 
+    private Boolean isActive;
+
     @ManyToOne
     @JoinColumn(name = "SeatStatusId", referencedColumnName = "Id")
     private SeatStatus seatStatus;
