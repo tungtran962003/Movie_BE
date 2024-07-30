@@ -1,5 +1,6 @@
 package com.example.movie_web_be.service.impl;
 
+import com.example.movie_web_be.dto.admin.RoomDto;
 import com.example.movie_web_be.entity.Cinema;
 import com.example.movie_web_be.entity.Room;
 import com.example.movie_web_be.repository.RoomRepository;
@@ -26,9 +27,11 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Page<Room> getPage(Integer page, Integer pageSize, Integer cinemaId) {
+    public Page<RoomDto> getPage(Integer page, Integer pageSize, Integer cinemaId) {
         Pageable pageable = PageRequest.of(page, pageSize);
-        return roomRepository.findAllByIsActiveAndCinema_IdOrderByIdDesc(pageable, cinemaId, true);
+        Page<RoomDto> pageRoom = roomRepository.getListRoomByCinemaIdPaginate(pageable, cinemaId);
+        pageRoom.getContent();
+        return pageRoom;
     }
 
     public Boolean checkName(String name) {

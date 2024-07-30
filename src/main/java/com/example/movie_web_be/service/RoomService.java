@@ -1,5 +1,6 @@
 package com.example.movie_web_be.service;
 
+import com.example.movie_web_be.dto.admin.RoomDto;
 import com.example.movie_web_be.entity.Cinema;
 import com.example.movie_web_be.entity.Room;
 import com.example.movie_web_be.request.CinemaRequest;
@@ -13,7 +14,7 @@ public interface RoomService {
 
     List<Room> getAll();
 
-    Page<Room> getPage(Integer page, Integer pageSize, Integer cinemaId);
+    Page<RoomDto> getPage(Integer page, Integer pageSize, Integer cinemaId);
 
     MessageResponse create(RoomRequest roomRequest);
 
