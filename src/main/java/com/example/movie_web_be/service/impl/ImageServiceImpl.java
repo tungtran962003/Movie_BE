@@ -1,6 +1,8 @@
 package com.example.movie_web_be.service.impl;
 
+import com.example.movie_web_be.entity.Account;
 import com.example.movie_web_be.entity.Movie;
+import com.example.movie_web_be.repository.AccountRepository;
 import com.example.movie_web_be.repository.MovieRepository;
 import com.example.movie_web_be.service.ImageService;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,9 @@ public class ImageServiceImpl implements ImageService {
 
     @Autowired
     private MovieRepository movieRepository;
+
+    @Autowired
+    private AccountRepository accountRepository;
 
     private byte[] convert(String imagePath) throws IOException {
         // Create a FileInputStream object to read the image file.
@@ -41,9 +46,9 @@ public class ImageServiceImpl implements ImageService {
         return imageData;
     }
 
-    private String getImagePath(String fileName) {
+    private String getImagePath(String fileName, String entityString) {
         String currentProjectPath = System.getProperty("user.dir");
-        String newPath = currentProjectPath + File.separator + "src/main/resources/static/assets/movie"
+        String newPath = currentProjectPath + File.separator + "src/main/resources/static/assets/" + entityString
                 + File.separator + fileName;
 
         return newPath;
@@ -57,9 +62,24 @@ public class ImageServiceImpl implements ImageService {
             return null;
         }
         try {
-            return convert(getImagePath(movie.getImage()));
+            return convert(getImagePath(movie.getImage(), "movie"));
         } catch (IOException e) {
             log.error("Convert image fail, movie image id = {}", movieId);
+            return null;
+        }
+    }
+
+    @Override
+    public byte[] getAvatarAccount(Integer accountId) {
+        Account account = accountRepository.findById(accountId).orElse(null);
+        if (account == null) {
+            log.info("account image id = {} is not exist on DB", accountId);
+            return null;
+        }
+        try {
+            return convert(getImagePath(account.getAvatar(), "avatar"));
+        } catch (IOException e) {
+            log.error("Convert image fail, account image id = {}", accountId);
             return null;
         }
     }

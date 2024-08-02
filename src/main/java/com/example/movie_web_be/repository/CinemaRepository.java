@@ -21,9 +21,4 @@ public interface CinemaRepository extends JpaRepository<Cinema, Integer> {
     Cinema findByNameAndIsActive(String name, Boolean isActive);
 
     Cinema findByIdAndIsActive(Integer id, Boolean isActive);
-
-    @Query(value = "SELECT r FROM Room r " +
-            "INNER JOIN Cinema c ON c.id = r.cinema.id " +
-            "WHERE c.id =:cinemaId")
-    List<Room> getListRoomByCinemaId(Integer cinemaId);
 }

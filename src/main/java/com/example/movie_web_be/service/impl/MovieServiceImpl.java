@@ -40,8 +40,8 @@ public class MovieServiceImpl implements MovieService {
     }
 //
     @Override
-    public Page<Movie> getPageUpComingMovie(Integer size, Integer pageSize) {
-        Pageable pageable = PageRequest.of(size, pageSize);
+    public Page<Movie> getPageUpComingMovie(Integer page, Integer pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
         return movieRepository.getPageUpComingMovie(pageable);
     }
 

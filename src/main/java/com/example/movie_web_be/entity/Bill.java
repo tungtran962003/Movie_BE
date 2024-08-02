@@ -35,4 +35,8 @@ public class Bill {
     private String phoneNumber;
 
     private Boolean isActive;
+
+    @ManyToOne
+    @JoinColumn(name = "VoucherId", referencedColumnName = "Id")
+    private Voucher voucher;
 }

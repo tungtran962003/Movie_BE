@@ -20,6 +20,4 @@ public interface CinemaService {
     MessageResponse update(Integer idUpdate, CinemaRequest cinemaRequest);
 
     MessageResponse delete(Integer idDelete);
-
-    Page<Room> getPageRoomByCinemaId(Integer cinemaId, Integer page, Integer pageSize);
 }

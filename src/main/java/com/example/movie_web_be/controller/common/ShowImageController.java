@@ -14,9 +14,15 @@ public class ShowImageController {
     @Autowired
     private ImageService imageService;
 
-    @GetMapping("/{movieId}")
+    @GetMapping("/movie/{movieId}")
     public ResponseEntity<byte[]> getImageMovie(@PathVariable Integer movieId) {
         byte[] imageMovie = imageService.getImageMovie(movieId);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(imageMovie);
+    }
+
+    @GetMapping("/account/{accountId}")
+    public ResponseEntity<byte[]> getAvatarAccount(@PathVariable Integer accountId) {
+        byte[] avatarAccount = imageService.getAvatarAccount(accountId);
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(avatarAccount);
     }
 }

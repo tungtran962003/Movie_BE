@@ -34,7 +34,4 @@ public class Voucher {
 
     private Boolean isActive;
 
-    @ManyToOne
-    @JoinColumn(name = "BillId", referencedColumnName = "Id")
-    private Bill bill;
 }

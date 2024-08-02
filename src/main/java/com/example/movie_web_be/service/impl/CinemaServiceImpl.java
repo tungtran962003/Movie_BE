@@ -86,14 +86,4 @@ public class CinemaServiceImpl implements CinemaService {
         }
         return new MessageResponse("Lỗi", 1);
     }
-
-    @Override
-    public Page<Room> getPageRoomByCinemaId(Integer cinemaId, Integer page, Integer pageSize) {
-        List<Room> listRoomByCinemaId = cinemaRepository.getListRoomByCinemaId(cinemaId);
-        Pageable pageable = PageRequest.of(page, pageSize);
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), listRoomByCinemaId.size());
-        List<Room> pageContent = listRoomByCinemaId.subList(start, end);
-        return new PageImpl<>(pageContent, pageable, listRoomByCinemaId.size());
-    }
 }
