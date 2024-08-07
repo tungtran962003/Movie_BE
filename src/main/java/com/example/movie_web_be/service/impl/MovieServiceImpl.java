@@ -15,7 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -46,8 +49,37 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    public List<Movie> getListMovieIsShowing() {
+        List<Movie> listMovieHomeResponse = new ArrayList<>();
+        List<Movie> listMovieIsShowIng = movieRepository.getListMovieIsShowIng();
+        int index = 1;
+        for (Movie movie: listMovieIsShowIng) {
+            if (index <= 8) {
+                listMovieHomeResponse.add(movie);
+                index++;
+            }
+        }
+        return listMovieHomeResponse;
+    }
+
+    @Override
+    public List<Movie> getListUpComingMovie() {
+        List<Movie> listMovieHomeResponse = new ArrayList<>();
+        List<Movie> listUpComingMovie = movieRepository.getListUpComingMovie();
+        int index = 1;
+        for (Movie movie: listUpComingMovie) {
+            if (index <= 8) {
+                listMovieHomeResponse.add(movie);
+                index++;
+            }
+        }
+        return listMovieHomeResponse;
+    }
+
+
+    @Override
     public MessageResponse create(String name, Integer time, String premiereDate, String description, String director,
-                                  String language, String performer, Integer movieTypeId, MultipartFile file) throws ParseException {
+                                  String language, String performer, Integer movieTypeId, String trailer, MultipartFile file) throws ParseException {
         Movie movie = new Movie();
         movie.setName(name);
         movie.setTime(time);
@@ -56,6 +88,7 @@ public class MovieServiceImpl implements MovieService {
         movie.setDirector(director);
         movie.setLanguage(language);
         movie.setPerformer(performer);
+        movie.setTrailer(trailer);
         movie.setIsActive(true);
         movie.setMovieType(MovieType.builder().id(movieTypeId).build());
         String fileName = file.getOriginalFilename();
@@ -68,7 +101,8 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MessageResponse update(Integer idUpdate, String name, Integer time, String premiereDate, String description, String director, String language, String performer, Integer movieTypeId, MultipartFile file) throws ParseException {
+    public MessageResponse update(Integer idUpdate, String name, Integer time, String premiereDate, String description, String director,
+                                  String language, String performer, Integer movieTypeId, String trailer, MultipartFile file) throws ParseException {
         Movie movie = movieRepository.findByIdAndIsActive(idUpdate, true);
         if (movie != null) {
             movie.setName(name);
@@ -78,6 +112,7 @@ public class MovieServiceImpl implements MovieService {
             movie.setDirector(director);
             movie.setLanguage(language);
             movie.setPerformer(performer);
+            movie.setTrailer(trailer);
             movie.setIsActive(true);
             movie.setMovieType(MovieType.builder().id(movieTypeId).build());
             if (file != null) {
@@ -102,5 +137,21 @@ public class MovieServiceImpl implements MovieService {
             return new MessageResponse("Xoá dữ liệu thành công", 0);
         }
         return new MessageResponse("Dữ liệu không tồn tại", 1);
+    }
+
+    @Override
+    public Page<Movie> search(Integer page, Integer pageSize, String name, String startDateStr, String endDateStr, String director, String language, String performer, Integer movieTypeId) throws ParseException {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Date startDate = null;
+        Date endDate = null;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if ("".equals(startDateStr)) {
+            startDate = sdf.parse("0000-01-01");
+        }
+        if ("".equals(endDateStr)) {
+            endDate = sdf.parse("9999-12-31");
+        }
+        Page<Movie> pageMovie = movieRepository.searchMovie(pageable, name, startDate, endDate, language, director, performer, movieTypeId);
+        return pageMovie;
     }
 }

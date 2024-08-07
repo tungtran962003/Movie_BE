@@ -19,4 +19,5 @@ public interface AccountService {
     MessageResponse update(Integer idUpdate, String name, String email, String password, Boolean gender, String birthDay, String phoneNumber, Integer rankCustomerId, Integer roleId, MultipartFile file) throws ParseException;
 
     MessageResponse delete(Integer idDelete);
+
 }

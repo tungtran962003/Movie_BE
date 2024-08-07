@@ -27,6 +27,7 @@ public class Movie {
 
     private Date premiereDate;
 
+    @Column(columnDefinition="TEXT")
     private String description;
 
     private String director;

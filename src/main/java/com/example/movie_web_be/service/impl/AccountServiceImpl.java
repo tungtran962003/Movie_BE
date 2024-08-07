@@ -85,11 +85,13 @@ public class AccountServiceImpl implements AccountService {
         if (account == null) {
             return new MessageResponse("Tài khoản không tồn tại", 1);
         }
-        if (checkEmailExists(email)) {
-            return new MessageResponse("Email đã tồn tại", 1);
-        }
-        if (checkPhoneNumberExists(phoneNumber)) {
-            return new MessageResponse("Số điện thoại đã tồn tại", 1);
+        if (!account.getEmail().equals(email) && !account.getPhoneNumber().equals(phoneNumber)) {
+            if (checkEmailExists(email)) {
+                return new MessageResponse("Email đã tồn tại", 1);
+            }
+            if (checkPhoneNumberExists(phoneNumber)) {
+                return new MessageResponse("Số điện thoại đã tồn tại", 1);
+            }
         }
         account.setUpdateDate(new Date());
         account.setName(name);
@@ -100,13 +102,17 @@ public class AccountServiceImpl implements AccountService {
         account.setPhoneNumber(phoneNumber);
         account.setRankCustomer(RankCustomer.builder().id(rankCustomerId).build());
         account.setRole(Role.builder().id(roleId).build());
+        if (file == null) {
+            accountRepository.save(account);
+            return new MessageResponse("Sửa dữ liệu thành công", 0);
+        }
         String fileName = file.getOriginalFilename();
         String extension = FileUtil.getFileExtension(fileName);
         String newFileName = "avatar" + new Date().getTime() + "." + extension;
         FileUtil.copyFile(file, newFileName, uploadDir);
         account.setAvatar(newFileName);
         accountRepository.save(account);
-        return new MessageResponse("Thêm dữ liệu thành công", 0);
+        return new MessageResponse("Sửa dữ liệu thành công", 0);
     }
 
     @Override

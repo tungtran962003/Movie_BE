@@ -43,9 +43,10 @@ public class MovieController {
                                     @RequestParam String language,
                                     @RequestParam String performer,
                                     @RequestParam Integer movieTypeId,
+                                    @RequestParam String trailer,
                                     @RequestParam MultipartFile file) throws ParseException {
         return ResponseEntity.ok(movieService.create(name, time, premiereDate, description, director,
-                language, performer, movieTypeId, file));
+                language, performer, movieTypeId, trailer, file));
     }
 
     @PutMapping(value = "/update")
@@ -57,15 +58,29 @@ public class MovieController {
                                     @RequestParam String director,
                                     @RequestParam String language,
                                     @RequestParam String performer,
+                                    @RequestParam String trailer,
                                     @RequestParam Integer movieTypeId,
                                     @RequestParam(required = false) MultipartFile file) throws ParseException {
         return ResponseEntity.ok(movieService.update(idUpdate, name, time, premiereDate, description, director,
-                language, performer, movieTypeId, file));
+                language, performer, movieTypeId, trailer, file));
     }
 
     @DeleteMapping("/delete/{idDelete}")
     public ResponseEntity<?> delete(@PathVariable Integer idDelete) {
         return ResponseEntity.ok(movieService.delete(idDelete));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> search(@RequestParam Integer page,
+                                    @RequestParam Integer pageSize,
+                                    @RequestParam(required = false) String name,
+                                    @RequestParam(required = false) String startDate,
+                                    @RequestParam(required = false) String endDate,
+                                    @RequestParam(required = false) String director,
+                                    @RequestParam(required = false) String language,
+                                    @RequestParam(required = false) String performer,
+                                    @RequestParam(required = false) Integer movieTypeId) throws ParseException {
+        return ResponseEntity.ok(movieService.search(page, pageSize, name, startDate, endDate, director, language, performer, movieTypeId));
     }
 
 }
